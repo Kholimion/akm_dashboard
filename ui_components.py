@@ -173,11 +173,12 @@ def render_data_input_tab(tab, category_label: str) -> None:
         
         # Магниты (с запоминанием последнего значения для направления)
         magnets_default = get_default_value(direction, NEW_TEXT_FIELDS[1])
-        magnets = st.text_input(
+        magnets = st.text_area(
             NEW_TEXT_FIELDS[1] + ":",
             value=magnets_default,
             key=f"magnets_{category_label}",
-            placeholder="Введите значение..."
+            placeholder="Введите значение...",
+            height=100
         )
         
         # Источник финансирования (с запоминанием последнего значения для направления)
@@ -191,11 +192,12 @@ def render_data_input_tab(tab, category_label: str) -> None:
         
         # Стратегия (с запоминанием последнего значения для направления)
         strategy_default = get_default_value(direction, NEW_TEXT_FIELDS[3])
-        strategy = st.text_input(
+        strategy = st.text_area(
             NEW_TEXT_FIELDS[3] + ":",
             value=strategy_default,
             key=f"strategy_{category_label}",
-            placeholder="Введите значение..."
+            placeholder="Введите значение...",
+            height=100
         )
         
         # Управленческие решения (с запоминанием последнего значения для направления)
