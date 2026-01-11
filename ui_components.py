@@ -79,22 +79,11 @@ def render_data_input_tab(tab, category_label: str) -> None:
         st.markdown("<div style='margin-bottom: 2rem;'>", unsafe_allow_html=True)
         
         # Выбор направления
-        direction_key = f"input_{category_label}"
         direction = st.selectbox(
             f"Направление ({category_label}):",
             CATEGORIES[category_label],
-            key=direction_key
+            key=f"input_{category_label}"
         )
-        
-        # Отслеживаем изменение направления для обновления значений по умолчанию
-        last_direction_key = f"last_direction_{category_label}"
-        if last_direction_key not in st.session_state:
-            st.session_state[last_direction_key] = direction
-        
-        # Если направление изменилось, обновляем значения полей
-        direction_changed = st.session_state[last_direction_key] != direction
-        if direction_changed:
-            st.session_state[last_direction_key] = direction
         
         # Стадия
         stage = st.selectbox(
@@ -105,16 +94,10 @@ def render_data_input_tab(tab, category_label: str) -> None:
         
         # Лидер (с запоминанием последнего значения для направления)
         leader_default = get_default_value(direction, NEW_TEXT_FIELDS[0])
-        leader_key = f"leader_{category_label}"
-        
-        # Если направление изменилось, обновляем значение
-        if direction_changed:
-            st.session_state[leader_key] = leader_default
-        
         leader = st.text_input(
             NEW_TEXT_FIELDS[0] + ":",
-            value=leader_default if direction_changed else st.session_state.get(leader_key, leader_default),
-            key=leader_key,
+            value=leader_default,
+            key=f"leader_{category_label}",
             placeholder="Введите значение..."
         )
         
@@ -190,49 +173,37 @@ def render_data_input_tab(tab, category_label: str) -> None:
         
         # Магниты (с запоминанием последнего значения для направления)
         magnets_default = get_default_value(direction, NEW_TEXT_FIELDS[1])
-        magnets_key = f"magnets_{category_label}"
-        if direction_changed:
-            st.session_state[magnets_key] = magnets_default
         magnets = st.text_input(
             NEW_TEXT_FIELDS[1] + ":",
-            value=magnets_default if direction_changed else st.session_state.get(magnets_key, magnets_default),
-            key=magnets_key,
+            value=magnets_default,
+            key=f"magnets_{category_label}",
             placeholder="Введите значение..."
         )
         
         # Источник финансирования (с запоминанием последнего значения для направления)
         funding_default = get_default_value(direction, NEW_TEXT_FIELDS[2])
-        funding_key = f"funding_{category_label}"
-        if direction_changed:
-            st.session_state[funding_key] = funding_default
         funding_source = st.text_input(
             NEW_TEXT_FIELDS[2] + ":",
-            value=funding_default if direction_changed else st.session_state.get(funding_key, funding_default),
-            key=funding_key,
+            value=funding_default,
+            key=f"funding_{category_label}",
             placeholder="Введите значение..."
         )
         
         # Стратегия (с запоминанием последнего значения для направления)
         strategy_default = get_default_value(direction, NEW_TEXT_FIELDS[3])
-        strategy_key = f"strategy_{category_label}"
-        if direction_changed:
-            st.session_state[strategy_key] = strategy_default
         strategy = st.text_input(
             NEW_TEXT_FIELDS[3] + ":",
-            value=strategy_default if direction_changed else st.session_state.get(strategy_key, strategy_default),
-            key=strategy_key,
+            value=strategy_default,
+            key=f"strategy_{category_label}",
             placeholder="Введите значение..."
         )
         
         # Управленческие решения (с запоминанием последнего значения для направления)
         decisions_default = get_default_value(direction, NEW_TEXT_FIELDS[4])
-        decisions_key = f"decisions_{category_label}"
-        if direction_changed:
-            st.session_state[decisions_key] = decisions_default
         management_decisions = st.text_input(
             NEW_TEXT_FIELDS[4] + ":",
-            value=decisions_default if direction_changed else st.session_state.get(decisions_key, decisions_default),
-            key=decisions_key,
+            value=decisions_default,
+            key=f"decisions_{category_label}",
             placeholder="Введите значение..."
         )
         
@@ -242,15 +213,15 @@ def render_data_input_tab(tab, category_label: str) -> None:
         # Кнопка сохранения
         if st.button("📂 Сохранить отчет", key=f"save_{category_label}", use_container_width=True):
             # Обновляем последние значения для направления
-            if leader:
+            if leader and leader.strip():
                 update_default_value(direction, NEW_TEXT_FIELDS[0], leader)
-            if magnets:
+            if magnets and magnets.strip():
                 update_default_value(direction, NEW_TEXT_FIELDS[1], magnets)
-            if funding_source:
+            if funding_source and funding_source.strip():
                 update_default_value(direction, NEW_TEXT_FIELDS[2], funding_source)
-            if strategy:
+            if strategy and strategy.strip():
                 update_default_value(direction, NEW_TEXT_FIELDS[3], strategy)
-            if management_decisions:
+            if management_decisions and management_decisions.strip():
                 update_default_value(direction, NEW_TEXT_FIELDS[4], management_decisions)
             
             df = load_data()
